@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/',(req,res)=>{
-  res.send('wlecome to backend of notebook')
+  res.send('wlecome to backend of notebook app')
 })
 app.use("/user", authRoute);
 app.use("/notes", notesRoute);
