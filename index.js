@@ -9,6 +9,9 @@ const notesRoute = require("./routes/notes");
 app.use(cors());
 app.use(express.json());
 
+app.get('/',(req,res)=>{
+  res.send('wlecome to backend of notebook')
+})
 app.use("/user", authRoute);
 app.use("/notes", notesRoute);
 
