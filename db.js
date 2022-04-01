@@ -1,4 +1,4 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://Muhammad:$$$Cloud@cluster0.037ci.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',()=>{
+mongoose.connect(process.env.mongoURI,()=>{
     console.log('connected to db');
 });
