@@ -15,17 +15,19 @@ router.post(
     body("password", "password must be 3 chars long").isLength({ min: 3 }),
   ],
   async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array(), success });
     }
     try {
       const user = new User(req.body);
-      const result = await user.save();
+      await user.save();
       const token = jwt.sign({ id: user.id }, secret);
-      res.json(result);
+      success = true;
+      res.json({ token, success });
     } catch (error) {
-      res.send(error.message);
+      res.status(401).send({ error: error.message, success: false });
     }
   }
 );
@@ -39,22 +41,28 @@ router.post(
     body("password", "Enter password").exists(),
   ],
   async (req, res) => {
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array(), success });
     }
     try {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).send("Please enter correct details");
+        return res
+          .status(400)
+          .send({ msg: "Please enter correct details", success });
       }
       if (user.password !== password) {
-        return res.status(400).send("Please enter correct details");
+        return res
+          .status(400)
+          .send({ msg: "Please enter correct details", success });
       }
 
       const token = jwt.sign({ id: user.id }, secret);
-      return res.json({ token });
+      success = true;
+      return res.json({ token, success });
     } catch (error) {
       res.send(error.message);
     }
